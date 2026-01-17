@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  password        String?  
+  avatar          String?
+  theme           String   @default("system")
+  role            String   @default("user") 
+  
+  privacySettings Json?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  businesses      Business[]
+  conversations   Conversation[] @relation("UserConversations")
+  messages        Message[]
+}
+
+model Business {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  name        String
+  category    String
+  description String
+  
+  contact     Json
+  products    Json?
+  
+  logo        String?
+  status      String   @default("pending")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Conversation {
+  id           String    @id @default(uuid())
+  isGroup      Boolean   @default(false)
+  name         String?   
+  adminId      String?   
+  
+  lastMessage  String?
+  lastMessageAt DateTime?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  participants User[]    @relation("UserConversations")
+  messages     Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  
+  content        String
+  type           String       @default("text")
+  fileUrl        String?
+  
+  readBy         Json?        // JSON of user IDs
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Waitlist {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  businessName String?
+  category     String?
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
