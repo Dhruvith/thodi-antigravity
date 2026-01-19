@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Footer() {
     return (
@@ -6,7 +7,10 @@ export function Footer() {
             <div className="container grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                 <div className="flex flex-col gap-4">
                     <Link href="/" className="flex items-center space-x-2 font-bold text-xl">
-                        <span className="text-primary">Thodi</span>Baat
+                        <div className="relative h-8 w-8 mr-2">
+                            <Image src="/logo.png" alt="ThodiBaat Logo" fill className="object-contain" />
+                        </div>
+                        <span><span className="text-primary">Thodi</span>Baat</span>
                     </Link>
                     <p className="text-sm text-foreground/60">
                         Secure, human-centric communication platform for everyone.

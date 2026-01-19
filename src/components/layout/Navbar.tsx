@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -29,7 +30,10 @@ export function Navbar() {
             <div className="container flex h-16 items-center justify-between">
                 <div className="flex items-center gap-6">
                     <Link href="/" className="flex items-center space-x-2 font-bold text-xl">
-                        <span className="text-primary">Thodi</span>Baat
+                        <div className="relative h-8 w-8 mr-2">
+                            <Image src="/logo.png" alt="ThodiBaat Logo" fill className="object-contain" />
+                        </div>
+                        <span><span className="text-primary">Thodi</span>Baat</span>
                     </Link>
                     <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
                         {routes.map((route) => (
