@@ -34,7 +34,7 @@ interface Message {
 
 interface Conversation {
     id: string;
-    lastMessage: string | null;
+    lastMessage: { content: string; senderId: string } | null; // Updated to match API object
     lastMessageAt: string | null;
     otherParticipants: User[];
 }
@@ -280,7 +280,7 @@ export function ChatApp() {
                                             )}
                                         </div>
                                         <p className={`text-xs truncate ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
-                                            {conv.lastMessage || 'Start a conversation'}
+                                            {typeof conv.lastMessage === 'string' ? conv.lastMessage : (conv.lastMessage?.content || 'Start a conversation')}
                                         </p>
                                     </div>
                                 </div>
