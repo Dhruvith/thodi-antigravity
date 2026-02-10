@@ -39,8 +39,8 @@ export async function GET(req: NextRequest) {
 
         if (search) {
             whereClause.OR = [
-                { name: { contains: search } },
-                { email: { contains: search } },
+                { name: { contains: search, mode: 'insensitive' } },
+                { email: { contains: search, mode: 'insensitive' } },
             ];
         }
 

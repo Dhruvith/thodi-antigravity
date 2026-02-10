@@ -23,8 +23,8 @@ export async function GET(req: NextRequest) {
         // Search by conversation name or participant name
         if (search) {
             whereClause.OR = [
-                { name: { contains: search } },
-                { participants: { some: { name: { contains: search }, id: { not: userId } } } }
+                { name: { contains: search, mode: 'insensitive' } },
+                { participants: { some: { name: { contains: search, mode: 'insensitive' }, id: { not: userId } } } }
             ];
         }
 
