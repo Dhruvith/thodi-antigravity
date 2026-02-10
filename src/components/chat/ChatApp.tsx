@@ -80,18 +80,24 @@ export function ChatApp() {
 
     // --- Queries ---
 
-    const { data: conversations, isLoading: loadingConvs } = useQuery({
+    const { data: conversationsData, isLoading: loadingConvs } = useQuery({
         queryKey: ['conversations'],
         queryFn: () => fetcher('/api/v1/conversations'),
-        refetchInterval: 3000 // Polling for new conversations/updates
+        refetchInterval: 5000 // Polling for new conversations/updates
     });
 
-    const { data: messages = [] } = useQuery({
+    const conversations = conversationsData?.conversations || [];
+
+    const { data: messagesData } = useQuery({
         queryKey: ['messages', selectedConversation?.id],
         queryFn: () => fetcher(`/api/v1/conversations/${selectedConversation!.id}/messages`),
         enabled: !!selectedConversation,
-        refetchInterval: 2000 // Realtime polling
+        refetchInterval: 3000 // Realtime polling
     });
+
+    // The API returns { messages: [...], pagination: {...} }
+    // Optimistic UI updates might have pushed directly to query cache, so we handle both array (legacy cache) and object
+    const messages = Array.isArray(messagesData) ? messagesData : (messagesData?.messages || []);
 
     // --- Mutations ---
 
@@ -445,10 +451,12 @@ function NewChatModal({ onClose }: { onClose: () => void }) {
     const queryClient = useQueryClient();
 
     // We need to fetch users
-    const { data: users, isLoading } = useQuery({
+    const { data: userData, isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: () => fetcher('/api/v1/users'),
     });
+
+    const users = userData?.users || [];
 
     const createConvMutation = useMutation({
         mutationFn: async (recipientId: string) => {
